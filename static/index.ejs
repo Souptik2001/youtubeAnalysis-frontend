@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://bootswatch.com/4/cyborg/bootstrap.min.css">
+        <%- include('./style.ejs') %>
+    </head>
+    <body>
+        <noscript>Sorry Javascript not available 😕</noscript>
+        <main class="container">
+            <h1 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Youtube explorer🤙</h1>
+            <div class="form-group">
+                <label for="filter"><strong>Channel Username</strong> <em>**as youtube api only accepts username so typing channel name here can not find the channel</em>😕</label>
+                <input type="text" class="form-control" id="channelFilter" placeholder="After typing press enter ! ">
+            </div>
+            <div class="form-group">
+                <label for="filter">Filter</label>
+                <input type="text" class="form-control" id="filter">
+            </div>
+            <section id="channelInfo" class="channelInfo_c" style="justify-content: center;"></section>
+            <section id="videos" class="row" style="max-width: 100%; overflow: hidden; justify-content: center;"></section>
+        </main>
+        <%- include('./script.ejs') %>
+    </body>
+</html>

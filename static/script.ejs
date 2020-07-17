@@ -1,0 +1,160 @@
+<script>
+const proxyendPoint = "https://ytanalyticsbackend.herokuapp.com/videos";
+// const proxyendPoint="http://127.0.0.1:8001/videos";
+const videosSec = document.getElementById("videos");
+var filterName = document.getElementById('filter');
+var filterChannel = document.getElementById('channelFilter');
+var channel = "mycodeschool";
+var playlist_id;
+var nextPageToken;
+var videoList = [];
+var loadingContent=true;
+var videoElementsById = {};
+var channelInfo = document.getElementById('channelInfo');
+
+filterName.addEventListener('keyup', (event)=>{
+    if(loadingContent==false){
+        let reRegex = new RegExp(filterName.value, 'gi');
+        for(var i=0; i<videoList.length; i++){
+            for(var j=0; j<videoList[i].length; j++){
+                if(reRegex.test(videoList[i][j].snippet.title)){
+                    videoElementsById[videoList[i][j].id].style.display = '';
+                }else{
+                    videoElementsById[videoList[i][j].id].style.display = 'none';
+                }
+            }
+        }
+
+    }
+});
+
+function displayVideos(videos){
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            videoList.push(videos);
+            videos.forEach(video => {
+                var videoElement = document.createElement('div');
+                videoElement.style="width: 18rem; padding:0; margin: 1rem";
+                videoElement.className = "card col-4 hoverEffect";
+                videoElementsById[video.id] = videoElement;
+                var img = document.createElement('img');
+                img.src=video.snippet.thumbnails.high.url;
+                img.className = "card-img-top";
+                var anchorElement = document.createElement('a');
+                anchorElement.href = `https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`;
+                anchorElement.target="_blank";
+                var cardBody = document.createElement('div');
+                cardBody.className = "card-body";
+                var title = document.createElement('h5');
+                title.innerText = video.snippet.title;
+                anchorElement.appendChild(title);
+                cardBody.appendChild(anchorElement);
+                videoElement.appendChild(img);
+                videoElement.appendChild(cardBody);
+                videosSec.appendChild(videoElement);
+            });
+            resolve();
+        },0);
+    });
+}
+
+filterChannel.addEventListener('keyup', (event)=>{
+    if(loadingContent==false){
+        if(event.keyCode==13){
+            channel=filterChannel.value;
+            filterChannel.value='';
+            videosSec.innerHTML = '';
+            filterChannel.value = '';
+            getVideos(undefined,channel);
+        }
+    }
+});
+
+function displayDetails(chunk){
+    channelInfo.innerHTML = '';
+    var channelTitle = document.createElement('div');
+    channelTitle.innerHTML = `<strong> Title : </strong>${chunk.channeltitle}`;
+    channelTitle.style.border = "0.5px solid white";
+    channelTitle.style.textAlign="center";
+    channelTitle.style.padding="10px 5px";
+    channelTitle.style.wordBreak="break-word";
+    channelInfo.appendChild(channelTitle);
+    var channelId = document.createElement('div');
+    channelId.innerHTML = `<strong> Id : </strong>${chunk.channelid}`;
+    channelId.style.border = "0.5px solid white";
+    channelId.style.textAlign="center";
+    channelId.style.padding="10px 5px";
+    channelId.style.wordBreak="break-word";
+    channelInfo.appendChild(channelId);
+    var channelSubs = document.createElement('div');
+    channelSubs.innerHTML = `<strong> Subscribers : </strong>${chunk.channelsubs}`;
+    channelSubs.style.border = "0.5px solid white";
+    channelSubs.style.textAlign="center";
+    channelSubs.style.padding="10px 5px";
+    channelSubs.style.wordBreak="break-word";
+    channelInfo.appendChild(channelSubs);
+    var channelViews = document.createElement('div');
+    channelViews.innerHTML = `<strong> Views : </strong>${chunk.channelviews}`;
+    channelViews.style.border = "0.5px solid white";
+    channelViews.style.textAlign="center";
+    channelViews.style.padding="10px 5px";
+    channelViews.style.wordBreak="break-word";
+    channelInfo.appendChild(channelViews);
+    var channelVideos = document.createElement('div');
+    channelVideos.innerHTML = `<strong> Videos : </strong>${chunk.channelvideos}`;
+    channelVideos.style.border = "0.5px solid white";
+    channelVideos.style.textAlign="center";
+    channelVideos.style.padding="10px 5px";
+    channelVideos.style.wordBreak="break-word";
+    channelInfo.appendChild(channelVideos);
+    var channelDesc = document.createElement('div');
+    channelDesc.innerHTML = `<strong> Description : </strong>${chunk.channeldesc}`;
+    channelDesc.style.border = "0.5px solid white";
+    channelDesc.style.textAlign="center";
+    channelDesc.style.padding="10px 5px";
+    channelDesc.style.wordBreak="break-word";
+    channelInfo.appendChild(channelDesc);
+}
+
+getVideos(undefined,channel);
+function getVideos(pageToken=undefined, channel_ID=undefined){
+    var proxyURL;
+    if(channel_ID!=undefined){
+        proxyURL = `${proxyendPoint}?channel_ID=${channel_ID}`;
+    }else{
+        proxyURL = `${proxyendPoint}?pageToken=${pageToken}&PLAYLIST_ID=${playlist_id}`;
+    }
+    loadingContent=true;
+    var loadingSign = document.createElement('h3');
+    loadingSign.innerText = `Loading......`;
+    loadingSign.id = 'loadingSign';
+    videosSec.appendChild(loadingSign);
+    fetch(proxyURL).then(response => response.json()).then(chunk=>{
+        document.getElementById('loadingSign').remove();
+        if(chunk.prevPageToken==undefined){
+            displayDetails(chunk);
+        }
+        if(chunk.error != undefined){
+            videosSec.innerHTML = `<h2>${chunk.error}</h2>`;
+            loadingContent=false;
+        }else{
+            var videos = chunk.items;
+            if(channel_ID!=undefined){
+                playlist_id = chunk.PLAYLIST_ID;
+            }
+            if(chunk.nextPageToken!=undefined){
+                nextPageToken = chunk.nextPageToken;
+            }else{
+                nextPageToken = undefined;
+            }
+            displayVideos(videos).then(()=>{
+                if(nextPageToken!=undefined){
+                    getVideos(nextPageToken,undefined);
+                }else{
+                    loadingContent=false;
+                }
+            });
+        }
+    });
+}
+</script>
