@@ -78,6 +78,7 @@ function displayDetails(chunk){
     channelTitle.style.textAlign="center";
     channelTitle.style.padding="10px 5px";
     channelTitle.style.wordBreak="break-word";
+    channelTitle.style.cursor="pointer";
     channelInfo.appendChild(channelTitle);
     var channelId = document.createElement('div');
     channelId.innerHTML = `<strong> Id : </strong>${chunk.channelid}`;
@@ -85,6 +86,7 @@ function displayDetails(chunk){
     channelId.style.textAlign="center";
     channelId.style.padding="10px 5px";
     channelId.style.wordBreak="break-word";
+    channelId.style.cursor="pointer";
     channelInfo.appendChild(channelId);
     var channelSubs = document.createElement('div');
     channelSubs.innerHTML = `<strong> Subscribers : </strong>${chunk.channelsubs}`;
@@ -92,6 +94,7 @@ function displayDetails(chunk){
     channelSubs.style.textAlign="center";
     channelSubs.style.padding="10px 5px";
     channelSubs.style.wordBreak="break-word";
+    channelSubs.style.cursor="pointer";
     channelInfo.appendChild(channelSubs);
     var channelViews = document.createElement('div');
     channelViews.innerHTML = `<strong> Views : </strong>${chunk.channelviews}`;
@@ -99,6 +102,7 @@ function displayDetails(chunk){
     channelViews.style.textAlign="center";
     channelViews.style.padding="10px 5px";
     channelViews.style.wordBreak="break-word";
+    channelViews.style.cursor="pointer";
     channelInfo.appendChild(channelViews);
     var channelVideos = document.createElement('div');
     channelVideos.innerHTML = `<strong> Videos : </strong>${chunk.channelvideos}`;
@@ -106,6 +110,7 @@ function displayDetails(chunk){
     channelVideos.style.textAlign="center";
     channelVideos.style.padding="10px 5px";
     channelVideos.style.wordBreak="break-word";
+    channelVideos.style.cursor="pointer";
     channelInfo.appendChild(channelVideos);
     var channelDesc = document.createElement('div');
     channelDesc.innerHTML = `<strong> Description : </strong>${chunk.channeldesc}`;
@@ -113,6 +118,7 @@ function displayDetails(chunk){
     channelDesc.style.textAlign="center";
     channelDesc.style.padding="10px 5px";
     channelDesc.style.wordBreak="break-word";
+    channelDesc.style.cursor="pointer";
     channelInfo.appendChild(channelDesc);
 }
 
